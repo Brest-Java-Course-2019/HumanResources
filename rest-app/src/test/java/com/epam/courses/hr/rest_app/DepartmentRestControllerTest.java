@@ -2,6 +2,7 @@ package com.epam.courses.hr.rest_app;
 
 import com.epam.courses.hr.model.Department;
 import com.epam.courses.hr.service.DepartmentService;
+import jdk.nashorn.internal.ir.annotations.Ignore;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -53,7 +54,7 @@ public class DepartmentRestControllerTest {
         Mockito.when(departmentService.findAll()).thenReturn(new ArrayList<Department>() {{add(create(0)); add(create(1));}});
 
         mockMvc.perform(
-                MockMvcRequestBuilders.get("/departments")
+                MockMvcRequestBuilders.get("/departments/all")
                         .accept(MediaType.APPLICATION_JSON_UTF8)
         ).andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))

@@ -45,9 +45,8 @@ class DepartmentServiceImplTest {
         long count = departmentService.findAll().size();
         LOGGER.debug("Count before: {}", count);
 
-        Department department = create();
         Assertions.assertThrows(DuplicateKeyException.class, () -> {
-            departmentService.add(department, department);
+            departmentService.add(departmentService.findAll().get(0));
         });
 
 

@@ -21,7 +21,7 @@ public interface DepartmentService {
      */
     List<DepartmentStub> findAllStubs();
 
-    void add(Department... departments);
+    void add(Department departments);
 
     /**
      * Find Department By Id.

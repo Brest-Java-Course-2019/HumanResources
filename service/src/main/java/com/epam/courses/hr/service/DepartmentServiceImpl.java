@@ -34,10 +34,8 @@ public class DepartmentServiceImpl implements DepartmentService{
     }
 
     @Override
-    public void add(Department... departments) {
-        for (Department department : departments) {
-            dao.addDepartment(department);
-        }
+    public void add(Department department) {
+        dao.addDepartment(department);
     }
 
     @Override

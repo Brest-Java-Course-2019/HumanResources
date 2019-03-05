@@ -25,32 +25,46 @@
     <!-- Component scan for @Controller, @Service... annotations -->
     <context:component-scan base-package="com.epam.courses.hr.*"/>
 
-    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-        <property name="driverClassName" value="org.h2.Driver"/>
-        <property name="url" value="jdbc:h2:mem:test_db;MODE=MYSQL;DB_CLOSE_DELAY=-1"/>
-        <property name="username" value="sa"/>
-        <property name="password" value=""/>
+    <!--<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">-->
+        <!--<property name="driverClassName" value="org.h2.Driver"/>-->
+        <!--<property name="url" value="jdbc:h2:mem:test_db;MODE=MYSQL;DB_CLOSE_DELAY=-1"/>-->
+        <!--<property name="username" value="sa"/>-->
+        <!--<property name="password" value=""/>-->
+    <!--</bean>-->
+
+    <!--<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">-->
+        <!--<property name="dataSource" ref="dataSource"/>-->
+    <!--</bean>-->
+
+    <!--<jdbc:initialize-database>-->
+        <!--<jdbc:script location="classpath:create-tables.sql"/>-->
+        <!--<jdbc:script location="classpath:data-scrips.sql"/>-->
+    <!--</jdbc:initialize-database>-->
+
+    <!--<bean id="namedParameterJdbcTemplate" class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate">-->
+        <!--<constructor-arg name="dataSource" ref="dataSource"/>-->
+    <!--</bean>-->
+
+    <!--<bean id="departmentDao" class="com.epam.courses.hr.dao.DepartmentDaoJdbcImpl">-->
+        <!--<constructor-arg ref="namedParameterJdbcTemplate"/>-->
+    <!--</bean>-->
+
+    <!--<bean id="departmentService" class="com.epam.courses.hr.service.DepartmentServiceImpl">-->
+        <!--<constructor-arg ref="departmentDao"/>-->
+    <!--</bean>-->
+
+    <bean id="departmentService" class="com.epam.courses.hr.web_app.consumers.DepartmentRestConsumer">
+        <constructor-arg index="0" value="${protocol}://${host}:${port}/${point.departments}"/>
+        <constructor-arg index="1" ref="restTemplate"/>
     </bean>
 
-    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-        <property name="dataSource" ref="dataSource"/>
-    </bean>
-
-    <jdbc:initialize-database>
-        <jdbc:script location="classpath:create-tables.sql"/>
-        <jdbc:script location="classpath:data-scrips.sql"/>
-    </jdbc:initialize-database>
-
-    <bean id="namedParameterJdbcTemplate" class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate">
-        <constructor-arg name="dataSource" ref="dataSource"/>
-    </bean>
-
-    <bean id="departmentDao" class="com.epam.courses.hr.dao.DepartmentDaoJdbcImpl">
-        <constructor-arg ref="namedParameterJdbcTemplate"/>
-    </bean>
-
-    <bean id="departmentService" class="com.epam.courses.hr.service.DepartmentServiceImpl">
-        <constructor-arg ref="departmentDao"/>
+    <bean id="restTemplate" class="org.springframework.web.client.RestTemplate">
+        <property name="messageConverters">
+            <list>
+                <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"/>
+            </list>
+        </property>
+        <!--<property name="errorHandler" ref="customResponseErrorHandler"/>-->
     </bean>
 
     <context:property-placeholder location="classpath:application.properties"/>
