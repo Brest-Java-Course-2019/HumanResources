@@ -38,7 +38,7 @@ public class DepartmentController {
     public final String departments(Model model) {
 
         LOGGER.debug("findAll({})", model);
-        model.addAttribute("departmentStubs", departmentService.findAllStubs();
+        model.addAttribute("departmentStubs", departmentService.findAllStubs());
         return "departments";
     }
 

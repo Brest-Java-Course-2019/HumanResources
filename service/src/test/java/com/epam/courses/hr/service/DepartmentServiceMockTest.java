@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.util.List;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -28,9 +29,9 @@ public class DepartmentServiceMockTest {
 
         Mockito.when(dao.findAll()).thenReturn(Stream.of(create()));
 
-        Stream<Department> result = service.findAll();
+        List<Department> result = service.findAll();
         assertNotNull(result);
-        assertEquals(1, result.count());
+        assertEquals(1, result.size());
 
         Mockito.verify(dao, Mockito.times(1)).findAll();
         Mockito.verifyNoMoreInteractions(dao);
