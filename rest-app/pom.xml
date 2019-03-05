@@ -14,6 +14,11 @@
     <packaging>war</packaging>
 
     <dependencies>
+
+        <dependency>
+            <groupId>com.epam.courses.hr</groupId>
+            <artifactId>service-api</artifactId>
+        </dependency>
         <dependency>
             <groupId>com.epam.courses.hr</groupId>
             <artifactId>service</artifactId>

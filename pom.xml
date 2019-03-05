@@ -15,7 +15,7 @@
         <module>test-db</module>
         <module>service</module>
         <module>web-app</module>
-        <module>api</module>
+        <module>service-api</module>
         <module>rest-app</module>
     </modules>
 
@@ -43,7 +43,7 @@
         <dependencies>
             <dependency>
                 <groupId>com.epam.courses.hr</groupId>
-                <artifactId>api</artifactId>
+                <artifactId>service-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

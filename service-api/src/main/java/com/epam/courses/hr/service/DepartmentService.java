@@ -3,23 +3,23 @@ package com.epam.courses.hr.service;
 import com.epam.courses.hr.model.Department;
 import com.epam.courses.hr.stub.DepartmentStub;
 
-import java.util.stream.Stream;
+import java.util.List;
 
 public interface DepartmentService {
 
     /**
      * Find all departments stream.
      *
-     * @return departments .
+     * @return departments.
      */
-    Stream<Department> findAll();
+    List<Department> findAll();
 
     /**
      * Get department stubs list.
      *
      * @return department stubs list.
      */
-    Stream<DepartmentStub> findAllStubs();
+    List<DepartmentStub> findAllStubs();
 
     void add(Department... departments);
 
