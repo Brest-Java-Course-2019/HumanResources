@@ -12,6 +12,7 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -28,29 +29,28 @@ class DepartmentServiceImplTest {
 
     @Test
     void findAll() {
-        Stream<Department> departments = departmentService.findAll();
+        List<Department> departments = departmentService.findAll();
         assertNotNull(departments);
     }
 
     @Test
     void findAllStubs() {
-        Stream<DepartmentStub> departments = departmentService.findAllStubs();
+        List<DepartmentStub> departments = departmentService.findAllStubs();
         assertNotNull(departments);
     }
 
     @Test
     void add() {
 
-        long count = departmentService.findAll().count();
+        long count = departmentService.findAll().size();
         LOGGER.debug("Count before: {}", count);
 
-        Department department = create();
         Assertions.assertThrows(DuplicateKeyException.class, () -> {
-            departmentService.add(department, department);
+            departmentService.add(departmentService.findAll().get(0));
         });
 
 
-        long newCount = departmentService.findAll().count();
+        long newCount = departmentService.findAll().size();
         LOGGER.debug("Count after: {}", newCount);
         assert count == newCount;
     }
@@ -65,14 +65,14 @@ class DepartmentServiceImplTest {
     @Test
     void findById() {
         // given
-        Optional<Department> firstDepartment = departmentService.findAll().findFirst();
-        assertTrue(firstDepartment.isPresent());
-        Integer id = firstDepartment.get().getDepartmentId();
+        Department firstDepartment = departmentService.findAll().get(0);
+        assertNotNull(firstDepartment);
+        Integer id = firstDepartment.getDepartmentId();
 
         // when
         Department department = departmentService.findById(id);
         assertNotNull(department);
 
-        assertEquals(firstDepartment.get().getDepartmentName(), department.getDepartmentName());
+        assertEquals(firstDepartment.getDepartmentName(), department.getDepartmentName());
     }
 }

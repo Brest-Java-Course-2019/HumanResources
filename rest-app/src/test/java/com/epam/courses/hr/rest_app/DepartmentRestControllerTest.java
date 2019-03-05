@@ -2,6 +2,7 @@ package com.epam.courses.hr.rest_app;
 
 import com.epam.courses.hr.model.Department;
 import com.epam.courses.hr.service.DepartmentService;
+import jdk.nashorn.internal.ir.annotations.Ignore;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,6 +20,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.util.ArrayList;
 import java.util.stream.Stream;
 
 @ExtendWith(SpringExtension.class)
@@ -29,7 +31,7 @@ public class DepartmentRestControllerTest {
     private DepartmentRestController controller;
 
     @Autowired
-    private DepartmentService service;
+    private DepartmentService departmentService;
 
     private MockMvc mockMvc;
 
@@ -43,16 +45,16 @@ public class DepartmentRestControllerTest {
 
     @AfterEach
     public void tearDown() {
-        Mockito.verifyNoMoreInteractions(service);
-        Mockito.reset(service);
+        Mockito.verifyNoMoreInteractions(departmentService);
+        Mockito.reset(departmentService);
     }
 
     @Test
     public void departments() throws Exception {
-        Mockito.when(service.findAll()).thenReturn(Stream.of(create(0), create(1)));
+        Mockito.when(departmentService.findAll()).thenReturn(new ArrayList<Department>() {{add(create(0)); add(create(1));}});
 
         mockMvc.perform(
-                MockMvcRequestBuilders.get("/departments")
+                MockMvcRequestBuilders.get("/departments/all")
                         .accept(MediaType.APPLICATION_JSON_UTF8)
         ).andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
@@ -64,7 +66,7 @@ public class DepartmentRestControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$[1].departmentDescription", Matchers.is("desc1")))
         ;
 
-        Mockito.verify(service, Mockito.times(1)).findAll();
+        Mockito.verify(departmentService, Mockito.times(1)).findAll();
     }
 
     private Department create(int index) {

@@ -7,7 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.stream.Stream;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Transactional
 public class DepartmentServiceImpl implements DepartmentService{
@@ -21,22 +22,20 @@ public class DepartmentServiceImpl implements DepartmentService{
     }
 
     @Override
-    public Stream<Department> findAll() {
+    public List<Department> findAll() {
         LOGGER.debug("Find all departments");
-        return dao.findAll();
+        return dao.findAll().collect(Collectors.toList());
     }
 
     @Override
-    public Stream<DepartmentStub> findAllStubs() {
+    public List<DepartmentStub> findAllStubs() {
         LOGGER.debug("Find all department stubs");
-        return dao.findAllStubs();
+        return dao.findAllStubs().collect(Collectors.toList());
     }
 
     @Override
-    public void add(Department... departments) {
-        for (Department department : departments) {
-            dao.addDepartment(department);
-        }
+    public void add(Department department) {
+        dao.addDepartment(department);
     }
 
     @Override
