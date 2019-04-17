@@ -6,12 +6,12 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -42,11 +42,11 @@ class DepartmentDaoJdbcImplTest {
 
     @Test
     void findAllStubs() {
-        Stream<DepartmentStub>dtos = departmentDao.findAllStubs();
+        Stream<DepartmentStub> dtos = departmentDao.findAllStubs();
         assertNotNull(dtos);
         assertTrue(dtos.count() > 0);
     }
-    
+
     @Test
     void findAllCheckCount() {
         Stream<Department> departments = departmentDao.findAll();
@@ -56,11 +56,19 @@ class DepartmentDaoJdbcImplTest {
 
     @Test
     void findById() {
-        Department department = departmentDao.findById(1).get();
-        assertNotNull(department);
-        assertEquals(FIRST_DEPARTMENT_ID, department.getDepartmentId().intValue());
-        assertEquals(DEV, department.getDepartmentName());
-        assertEquals(DEVELOPMENT_DEPARTMENT, department.getDepartmentDescription());
+        Optional<Department> departmentOptional = departmentDao.findById(1);
+        assertTrue(departmentOptional.isPresent());
+        departmentOptional.ifPresent(department -> {
+            assertEquals(FIRST_DEPARTMENT_ID, department.getDepartmentId().intValue());
+            assertEquals(DEV, department.getDepartmentName());
+            assertEquals(DEVELOPMENT_DEPARTMENT, department.getDepartmentDescription());
+        });
+    }
+
+    @Test
+    void findByIdEmpty() {
+        Optional<Department> departmentOptional = departmentDao.findById(99999);
+        assertFalse(departmentOptional.isPresent());
     }
 
     @Test
@@ -115,9 +123,7 @@ class DepartmentDaoJdbcImplTest {
         Department department = departments.findFirst().get();
         departmentDao.delete(department.getDepartmentId());
 
-        Assertions.assertThrows(DataAccessException.class, () -> {
-            departmentDao.findById(department.getDepartmentId());
-        });
+        assertFalse(departmentDao.findById(department.getDepartmentId()).isPresent());
     }
 
 }

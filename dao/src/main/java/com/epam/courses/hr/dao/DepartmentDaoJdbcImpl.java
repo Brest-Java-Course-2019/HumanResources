@@ -4,6 +4,7 @@ import com.epam.courses.hr.model.Department;
 import com.epam.courses.hr.stub.DepartmentStub;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -68,9 +69,10 @@ public class DepartmentDaoJdbcImpl implements DepartmentDao {
     public Optional<Department> findById(Integer departmentId) {
         LOGGER.debug("findById({})", departmentId);
         SqlParameterSource namedParameters = new MapSqlParameterSource(DEPARTMENT_ID, departmentId);
-        Department department = namedParameterJdbcTemplate.queryForObject(FIND_BY_ID, namedParameters,
+        List<Department> results = namedParameterJdbcTemplate.query(FIND_BY_ID, namedParameters,
                 BeanPropertyRowMapper.newInstance(Department.class));
-        return Optional.ofNullable(department);
+        return Optional.ofNullable(DataAccessUtils.uniqueResult(results));
+
     }
 
     @Override
